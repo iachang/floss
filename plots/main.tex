@@ -1,0 +1,90 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{amssymb}
+\usepackage{pgfplots}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{graphicx}
+\usepackage{float}
+
+% PGFPlots configuration
+\pgfplotsset{compat=1.18}
+\pgfplotsset{
+    every axis/.append style={
+        ylabel near ticks,
+        label style={font=\scriptsize},
+        tick label style={font=\scriptsize},
+        title style={font=\scriptsize},
+        grid=both,
+        grid style={dashed, color=lightgray},
+        legend style={font=\scriptsize, nodes={scale=0.9}},
+        legend image post style={scale=0.5},
+        try min ticks = 6,
+        max space between ticks = \ifx\fullver\undefined 15pt \else 16pt \fi,
+    },
+    discard if not/.style 2 args={
+        x filter/.append code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{}
+            \fi
+        }
+    },
+    select coords/.style n args={4}{
+        x filter/.append code={
+            \ifnum\coordindex=#1
+            \else
+                \ifnum\coordindex=#2
+                \else
+                    \ifnum\coordindex=#3
+                    \else
+                        \ifnum\coordindex=#4
+                        \else
+                            \def\pgfmathresult{}
+                        \fi
+                    \fi
+                \fi
+            \fi
+        }
+    },
+}
+
+% Document geometry
+\geometry{
+    a4paper,
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+}
+
+\begin{document}
+
+% Include individual figure files here
+\begin{figure}[H]
+\centering
+\input{plot_shuffling}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\input{plot_sorting}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\input{plot_pareto_shuffle}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\input{plot_pareto_sort}
+\end{figure}
+
+\end{document}

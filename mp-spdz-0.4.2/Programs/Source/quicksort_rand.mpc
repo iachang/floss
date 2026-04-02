@@ -1,0 +1,98 @@
+from Compiler.types import sint, regint, Array
+from Compiler.library import if_, while_loop, print_ln
+
+def swap(arr, i, j):
+    @if_(i != j)
+    def _():
+        tmp = arr[i]
+        arr[i] = arr[j]
+        arr[j] = tmp
+
+def partition(arr, l, r):
+    pivot = arr[r]
+    i = l - 1
+
+    j = regint(0)
+    j.update(l)
+
+    @while_do(lambda: j < r)
+    def _():
+        c = (arr[j] <= pivot).reveal()
+        @if_(c == 1)
+        def __():
+            i.update(i + 1)
+            swap(arr, i, j)
+
+        j.update(j + 1)
+
+    p = i + 1
+    swap(arr, p, r)
+    return p
+
+def quicksort_iter(arr, n):
+    stack_l = Array(n, regint)
+    stack_r = Array(n, regint)
+    top = regint(0)
+
+    # push (0, n-1)
+    stack_l[0] = regint(0)
+    stack_r[0] = regint(n - 1)
+
+    # while top >= 0
+    @while_do(lambda: top >= 0)
+    def _():
+        l = stack_l[top]
+        r = stack_r[top]
+        top.update(top - 1)
+
+        # if l < r:
+        @if_(l < r)
+        def __():
+            p = partition(arr, l, r)
+
+            # left side: (l, p-1)
+            @if_(p - 1 > l)
+            def ___():
+                top.update(top + 1)
+                stack_l[top] = l
+                stack_r[top] = p - 1
+
+            # right side: (p+1, r)
+            @if_(p + 1 < r)
+            def ____():
+                top.update(top + 1)
+                stack_l[top] = p + 1
+                stack_r[top] = r
+
+def main():
+    n = int(program.args[1]) if len(program.args) > 0 else 20
+
+    k = n.bit_length() + 1
+
+
+    idx_bits = MultiArray([n, k], sint)
+
+    a = Array(n, sint)
+    for i in range(n):
+        r = sint.get_random() % (1 << 32)
+
+        # store bit decomposition of i as secret-shared bits
+        for b in range(k):
+            idx_bits[i][b] = sint((i >> b) & 1)
+
+        # reconstruct i from its secret-shared bits
+        idx = sint(0)
+        for b in range(k):
+            idx += idx_bits[i][b] * (1 << b)
+
+        # pack: top bits = r, low k bits = idx
+        a[i] = r * (1 << k) + idx
+        
+
+    quicksort_iter(a, n)
+
+    print_ln("sorted:")
+    for i in range(n):
+        print_ln("%s", a[i].reveal())
+
+main()

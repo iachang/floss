@@ -1,0 +1,75 @@
+% Pareto sort: Online Time vs Offline Compute Cost (InputSize=2^13)
+% Run plots/gen_plot_data.py before compiling.
+\definecolor{flossred}{HTML}{a93226}
+\definecolor{permblue}{HTML}{2874a6}
+\definecolor{opmccgreen}{HTML}{1e8449}
+\definecolor{simplepurple}{HTML}{9b59b6}
+\definecolor{paretoyellow}{rgb}{1,1,0.85}
+
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.3\textwidth,
+    height=5.0cm,
+    xmode=log,
+    ymode=log,
+    x dir=reverse,
+    y dir=reverse,
+    xmin=1,
+    xmax=1000,
+    ymin=0.1,
+    ymax=10,
+    xlabel={Online Time},
+    ylabel={Offline Monetary Cost},
+    legend pos=north east,
+    legend style={font=\scriptsize},
+    ymajorgrids=true,
+    yminorgrids=false,
+    xmajorgrids=true,
+    xminorgrids=false,
+    grid style={dashed, color=lightgray},
+    set layers,
+    ytick={0.1, 1, 10},
+    yticklabels={\$0.10, \$1.00, \$10.00},
+    clip=false,
+]
+
+% Pareto frontier region (prior work) - light yellow, behind ticks and frame
+\addplot[fill=paretoyellow, draw=none, forget plot, on layer=axis background] table[x=X, y=Y, col sep=comma]{plot_data/pareto_sort_frontier.csv} -- cycle;
+
+% Data points with sort-consistent markers and colors
+\addplot[only marks, mark=*, mark size=3pt, color=flossred, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_radix_floss.csv};
+\addplot[only marks, mark=*, mark size=3pt, color=permblue, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_radix_permnet.csv};
+\addplot[only marks, mark=*, mark size=3pt, color=simplepurple, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_radix_simplepermnet.csv};
+\addplot[only marks, mark=square*, mark size=3pt, color=flossred, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_sts_floss.csv};
+\addplot[only marks, mark=square*, mark size=3pt, color=permblue, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_sts_permnet.csv};
+\addplot[only marks, mark=square*, mark size=3pt, color=simplepurple, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_sts_simplepermnet.csv};
+\addplot[only marks, mark=square*, mark size=3pt, color=opmccgreen, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_sts_opmcc.csv};
+\addplot[only marks, mark=diamond*, mark size=3pt, color=BurntOrange, forget plot]
+    table[x=OnlineTime, y=OfflineCost, col sep=comma]{plot_data/pareto_sort_sortnet.csv};
+
+% "Better" arrow (points toward lower time and cost)
+\draw[->, line width=1.0pt, shorten >=1pt, shorten <=1pt] (rel axis cs:0.08,0.08) -- (rel axis cs:0.28,0.28);
+\node[anchor=center, font=\scriptsize, inner sep=0, rotate=45] at (rel axis cs:0.22,0.12) {Better};
+
+% Legend to the right (single column, short skips between Radix / StS / SortNet)
+\node[anchor=west, inner sep=2pt, font=\scriptsize] at ($(current axis.east) + (0.2cm,0.3cm)$) {%
+    \begin{tabular}{@{}l@{}}
+    \textcolor{flossred}{$\bullet$} Radix[FLOSS] \\
+    \textcolor{permblue}{$\bullet$} Radix[PermNet] \\
+    \textcolor{simplepurple}{$\bullet$} Radix[SimplePermNet] \\[4pt]
+    \textcolor{flossred}{$\blacksquare$} StS[FLOSS] \\
+    \textcolor{permblue}{$\blacksquare$} StS[PermNet] \\
+    \textcolor{simplepurple}{$\blacksquare$} StS[SimplePermNet] \\
+    \textcolor{opmccgreen}{$\blacksquare$} StS[OPMCC] \\[4pt]
+    \textcolor{BurntOrange}{$\blacklozenge$} SortNet
+    \end{tabular}};
+
+\end{axis}
+\end{tikzpicture}

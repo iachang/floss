@@ -1,0 +1,3 @@
+# Anonymous mirror for artifact evaluation (used by start_cluster.py).
+ZIP_URL=https://anonymous.4open.science/api/repo/twopc-shuffling-implementation-F9DF/zip
+SYSTEM_CONFIG_URL=https://anonymous.4open.science/r/twopc-shuffling-implementation-F9DF/artifacts/system.config

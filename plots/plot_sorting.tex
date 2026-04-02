@@ -1,0 +1,188 @@
+% Sort benchmark figures: 2x3 grid (Online | Offline | Total) x (Time | Bandwidth)
+% Run plots/gen_plot_data.py before compiling to generate merged CSV files.
+% Colors match shuffle: FLOSS, PermNet, OPMCC, SimplePermNet
+\definecolor{flossred}{HTML}{a93226}
+\definecolor{permblue}{HTML}{2874a6}
+\definecolor{opmccgreen}{HTML}{1e8449}
+\definecolor{simplepurple}{HTML}{9b59b6}
+
+\begin{tikzpicture}
+    % Row 1: Time plots (Online, Offline, Total)
+    \begin{axis}[
+        name=online_time,
+        ylabel={Time (s)},
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_online_time.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_online_time.csv};
+    \end{axis}
+
+    \begin{axis}[
+        name=offline_time,
+        at={($(0.9cm,0cm) + (online_time.east)$)},
+        anchor=west,
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_offline_time.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_offline_time.csv};
+    \end{axis}
+
+    \begin{axis}[
+        name=total_time,
+        at={($(0.9cm,0cm) + (offline_time.east)$)},
+        anchor=west,
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_total_time.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_total_time.csv};
+    \end{axis}
+
+    % Row 2: Bandwidth plots (Online, Offline, Total)
+    \begin{axis}[
+        name=online_bw,
+        at={($(0cm,-0.4cm) + (online_time.south west)$)},
+        anchor=north west,
+        ylabel={Comm. (MB)},
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={$2^{9}$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_online_bandwidth.csv};
+    \end{axis}
+
+    \begin{axis}[
+        name=offline_bw,
+        at={($(0.9cm,0cm) + (online_bw.east)$)},
+        anchor=west,
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={$2^{9}$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_offline_bandwidth.csv};
+    \end{axis}
+
+    \begin{axis}[
+        name=total_bw,
+        at={($(0.9cm,0cm) + (offline_bw.east)$)},
+        anchor=west,
+        scale only axis,
+        width=0.2\textwidth,
+        height=2.2cm,
+        xmin=-0.5,
+        xmax=4.5,
+        ymode=log,
+        ymajorgrids=true,
+        yminorgrids=false,
+        grid style={dashed, color=lightgray},
+        xtick={0,1,2,3,4},
+        xticklabels={$2^{9}$, $2^{10}$, $2^{11}$, $2^{12}$, $2^{13}$},
+    ]
+    \addplot[line width=1.2pt, solid, color=flossred, mark=*, mark size=1.5] table[x=Index, y=FLOSSRadix, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=*, mark size=1.5] table[x=Index, y=PermNetRadix, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=*, mark size=1.5] table[x=Index, y=SimplePermNetRadix, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=flossred, mark=square*, mark size=1.5] table[x=Index, y=FLOSSthenSort, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=permblue, mark=square*, mark size=1.5] table[x=Index, y=PermNetthenSort, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=simplepurple, mark=square*, mark size=1.5] table[x=Index, y=SimplePermNetthenSort, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=opmccgreen, mark=square*, mark size=1.5] table[x=Index, y=OPMCCthenSort, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \addplot[line width=1.2pt, solid, color=BurntOrange, mark=diamond*, mark size=1.5] table[x=Index, y=SortingNetwork, col sep=comma]{plot_data/sort_total_bandwidth.csv};
+    \end{axis}
+
+    % Column headers
+    \node[anchor=south, font=\scriptsize] at ($(online_time.north) + (0,0.15cm)$) {Online Costs};
+    \node[anchor=south, font=\scriptsize] at ($(offline_time.north) + (0,0.15cm)$) {Offline Costs};
+    \node[anchor=south, font=\scriptsize] at ($(total_time.north) + (0,0.15cm)$) {Total Costs};
+
+    % Legend to the right (single column, short skips between Radix / StS / SortNet)
+    \node[anchor=west, inner sep=2pt, font=\scriptsize] at ($(total_time.east) + (0.2cm,-0.4cm)$) {%
+        \begin{tabular}{@{}l@{}}
+        \textcolor{flossred}{$\bullet$} Radix[FLOSS] \\
+        \textcolor{permblue}{$\bullet$} Radix[PermNet] \\
+        \textcolor{simplepurple}{$\bullet$} Radix[SimplePermNet] \\[4pt]
+        \textcolor{flossred}{$\blacksquare$} StS[FLOSS] \\
+        \textcolor{permblue}{$\blacksquare$} StS[PermNet] \\
+        \textcolor{simplepurple}{$\blacksquare$} StS[SimplePermNet] \\
+        \textcolor{opmccgreen}{$\blacksquare$} StS[OPMCC] \\[4pt]
+        \textcolor{BurntOrange}{$\blacklozenge$} SortNet
+        \end{tabular}};
+
+    % X-axis label (shared, below row 2)
+    \node[anchor=north, font=\scriptsize] at ($(offline_bw.south) + (0,-0.4cm)$) {Input Size};
+\end{tikzpicture}

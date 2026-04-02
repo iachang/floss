@@ -1,0 +1,12 @@
+from Compiler.library import for_range_opt
+
+T = int(program.args[1]) if len(program.args) > 1 else 10000   # triples
+
+s = MemValue(sint(0))
+@for_range_opt(T)
+def _(i):
+    a = sint.get_random()
+    b = sint.get_random()
+    s.write(s.read() + a * b)
+
+print_ln("done %s", s.read().reveal())
