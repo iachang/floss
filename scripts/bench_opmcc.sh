@@ -48,7 +48,7 @@ extract_bytes_recv() {
 
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/../MOSAC"
+cd "$SCRIPT_DIR/../opm"
 
 for SMALL_POWER in 4; do
   OUT_CSV="shuffle_opmcc_offline.csv"

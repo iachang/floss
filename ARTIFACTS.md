@@ -160,7 +160,7 @@ The provided commands will run the benchmarks synchronously all at once. This me
 1. [10 minutes] Run OPM benchmarks on Docker:
 
 ```sh
-cd MOSAC/
+cd OPM/
 docker build -t mosac:latest .
 docker run -it --name mosac-dev --cap-add=NET_ADMIN --privileged=true mosac:latest bash
 
@@ -173,8 +173,8 @@ exit # exit Docker instance when finished
 
 ```sh
 cd .. # return to project root directory
-docker cp mosac-dev:/MOSAC/shuffle_opmcc_offline.csv .
-docker cp mosac-dev:/MOSAC/shuffle_opmcc_online.csv .
+docker cp mosac-dev:/opm/shuffle_opmcc_offline.csv .
+docker cp mosac-dev:/opm/shuffle_opmcc_online.csv .
 ```
 
 3. [2 hours] Run the remaining baseline benchmarks in ALONE mode:

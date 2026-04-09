@@ -7,7 +7,7 @@ This Rust library provides a framework for building modular arithmetic permutati
 This repository is organized as follows:
 
 - [artifacts/](artifacts/) — Files and scripts for generating artifacts on AWS EC2
-- [MOSAC](mosac/) — Source code files for OPM (provided by and approved to release by [Song et. al, 2023](https://eprint.iacr.org/2023/1794))
+- [OPM](opm/) — Source code files for OPM (provided by and approved to release by [Song et. al, 2023](https://eprint.iacr.org/2023/1794))
 - [mp-spdz-0.4.2/Programs/Source](mp-spdz-0.4.2/Programs/Source) — MPC circuit descriptions we use to benchmark shuffling protocols and sorting protocols with MP-SPDZ, including `sort-bench.py`, `quicksort.mpc`, and `quicksort_rand.mpc`.
 - [src/arithpermcircprep/mod.rs](src/arithpermcircprep/mod.rs) — Core trait definition for generating preprocessing for an arithmetic permutation circuit
 - [src/arithpermcircprep/perm_network.rs](src/arithpermcircprep/perm_network.rs) — Permutation preprocessing using the [Mohassel et. al, 2014](https://eprint.iacr.org/2014/102) O(1) round malicious secure permutation network construction
@@ -64,7 +64,7 @@ make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x
 For local computation on a single machine, running OPM benchmarks on Docker are supported:
 
 ```zsh
-cd MOSAC
+cd OPM
 docker build -t mosac:latest .
 ```
 

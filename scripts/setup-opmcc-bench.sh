@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # ---- Config ----
-REPO_DIR="MOSAC"   # folder name to cd into
+REPO_DIR="opm"   # folder name to cd into
 ZSHRC="${HOME}/.zshrc"
 
 echo "==> [1/8] Installing dependencies (apt + npm prerequisites)"
