@@ -1,5 +1,7 @@
 # FLOSS (Fast Linear Online Secret-Shared Shuffle)
 
+<img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/d100d1e4-d7fa-4c98-85b9-d1f8f3c6ce46" />
+
 This Rust library provides a framework for building modular arithmetic permutation circuits in two-party computation (2PC).
 
 ## Project Structure
