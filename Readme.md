@@ -2,7 +2,7 @@
 
 <img width="191" height="20" alt="image" src="https://github.com/user-attachments/assets/d100d1e4-d7fa-4c98-85b9-d1f8f3c6ce46" />
 
-This Rust library provides a framework for building modular arithmetic permutation circuits in two-party computation (2PC).
+This Rust library provides a framework for building modular arithmetic permutation circuits in two-party computation (2PC). We refer the Usenix Artifact Evaluation reviewers to our Artifact Evaluation README at [ARTIFACTS.md](ARTIFACTS.md), which provides a step-by-step guide on reproducing our results.
 
 ## Project Structure
 
