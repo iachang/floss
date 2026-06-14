@@ -123,9 +123,19 @@ Because of this, users cannot reproduce the pareto plots on a local computer sin
 
 Install basic dependencies:
 
+Ubuntu 22.04:
 ```zsh
-sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-filesystem-dev libboost-iostreams-dev libboost-thread-dev libgmp-dev libntl-dev libsodium-dev libssl-dev libtool python3 unzip
+sudo apt-get install automake build-essential clang cmake git libboost-dev libboost-filesystem-dev libboost-iostreams-dev libboost-thread-dev libgmp-dev libntl-dev libsodium-dev libssl-dev libtool python3 unzip```
 
+Mac OS X:
+```zsh
+xcode-select --install
+
+brew install automake cmake git boost gmp ntl libsodium openssl libtool python unzip
+```
+
+Install Python libraries:
+```
 python3 -m pip install numpy matplotlib pandas scipy latex
 ```
 
