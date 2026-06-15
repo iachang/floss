@@ -79,7 +79,7 @@ cd .. # return to project root directory
 
 9. To view plot/table results:
 
-**(Experiment E1) Table 1**
+**(Experiment E1) Table 1 + Individual shuffling data**
 
 ```sh
 cat plots/plot_data/shuffle_offline_time.csv
@@ -92,6 +92,17 @@ cat plots/plot_data/shuffle_online_time.csv
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
 ```
+
+**(Experiment E2) Individual sorting data**
+```sh
+cat plots/plot_data/sort_offline_bandwidth.csv
+cat plots/plot_data/sort_offline_time.csv
+cat plots/plot_data/sort_online_bandwidth.csv
+cat plots/plot_data/sort_online_time.csv
+cat plots/plot_data/sort_total_bandwidth.csv
+cat plots/plot_data/sort_total_time.csv
+```
+
 
 **(Experiment E1 + E2) Figures 7–10**
 
@@ -214,7 +225,7 @@ cd .. # return to project root directory
 
 5. To view plot/table results:
 
-**(Experiment E1) Table 1**
+**(Experiment E1) Table 1 + Individual shuffling data**
 
 ```sh
 cat plots/plot_data/shuffle_offline_time.csv
@@ -226,6 +237,16 @@ cat plots/plot_data/shuffle_online_time.csv
 ```sh
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
+```
+
+**(Experiment E2) Individual sorting data**
+```sh
+cat plots/plot_data/sort_offline_bandwidth.csv
+cat plots/plot_data/sort_offline_time.csv
+cat plots/plot_data/sort_online_bandwidth.csv
+cat plots/plot_data/sort_online_time.csv
+cat plots/plot_data/sort_total_bandwidth.csv
+cat plots/plot_data/sort_total_time.csv
 ```
 
 **(Experiment E1 + E2) Figures 7-10**
