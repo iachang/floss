@@ -87,11 +87,12 @@ cat plots/plot_data/shuffle_offline_time.csv
 cat plots/plot_data/shuffle_online_time.csv
 ```
 
-**(Experiment E1) Table 3 (in Project Root directory)**
+**(Experiment E2) Individual
+sorting data**
 
 ```sh
-cat shuffle_floss_offline.csv
-cat shuffle_perm_network_offline.csv
+cat plots/plot_data/sort_offline_time.csv
+cat plots/plot_data/sort_online_time.csv
 ```
 
 **(Experiment E1 + E2) Figures 7–10**
@@ -99,6 +100,15 @@ cat shuffle_perm_network_offline.csv
 ```sh
 open plots/main.pdf
 ```
+
+**(Experiment E1) Table 3 (in Project Root directory)**
+
+```sh
+cat shuffle_floss_offline.csv
+cat shuffle_perm_network_offline.csv
+```
+
+
 
 ### Common issues:
 
@@ -212,11 +222,12 @@ cat plots/plot_data/shuffle_offline_time.csv
 cat plots/plot_data/shuffle_online_time.csv
 ```
 
-**(Experiment E1) Table 3 (in Project Root directory)**
+**(Experiment E2) Individual
+sorting data**
 
 ```sh
-cat shuffle_floss_offline.csv
-cat shuffle_perm_network_offline.csv
+cat plots/plot_data/sort_offline_time.csv
+cat plots/plot_data/sort_online_time.csv
 ```
 
 **(Experiment E1 + E2) Figures 7-10**
@@ -224,3 +235,14 @@ cat shuffle_perm_network_offline.csv
 ```sh
 open plots/main.pdf
 ```
+
+**(Experiment E1) Table 3 (in Project Root directory)**
+
+```sh
+cat shuffle_floss_offline.csv
+cat shuffle_perm_network_offline.csv
+```
+
+
+
+
