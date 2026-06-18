@@ -79,21 +79,22 @@ cd .. # return to project root directory
 
 9. To view plot/table results:
 
-**Table 1**
+**(Experiment E1) Table 1 + Individual
+shuffling data**
 
 ```sh
 cat plots/plot_data/shuffle_offline_time.csv
 cat plots/plot_data/shuffle_online_time.csv
 ```
 
-**Table 3 (in Project Root directory)**
+**(Experiment E1) Table 3 (in Project Root directory)**
 
 ```sh
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
 ```
 
-**Figures 7–10**
+**(Experiment E1 + E2) Figures 7–10**
 
 ```sh
 open plots/main.pdf
@@ -203,21 +204,22 @@ cd .. # return to project root directory
 
 5. To view plot/table results:
 
-**Table 1**
+**(Experiment E1) Table 1 + Individual
+shuffling data**
 
 ```sh
 cat plots/plot_data/shuffle_offline_time.csv
 cat plots/plot_data/shuffle_online_time.csv
 ```
 
-**Table 3 (in Project Root directory)**
+**(Experiment E1) Table 3 (in Project Root directory)**
 
 ```sh
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
 ```
 
-**Figures 7 and 9**
+**(Experiment E1 + E2) Figures 7-10**
 
 ```sh
 open plots/main.pdf
