@@ -56,10 +56,13 @@ Compile MP-SPDZ and 2PC malicious-secure protocols:
 
 ```zsh
 cd mp-spdz-0.4.2
+echo "MY_CFLAGS += -DINSECURE" >> CONFIG.mine
 make clean
 make setup
 make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x
 ```
+
+The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. It is needed for the artifact benchmarks if MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`; do not use this build for production deployments. If you add the flag after a previous MP-SPDZ build, run `make clean` before recompiling.
 
 ### OPM (on Docker)
 

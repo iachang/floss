@@ -159,10 +159,13 @@ Compile MP-SPDZ and required protocols:
 
 ```zsh
 cd mp-spdz-0.4.2
+echo "MY_CFLAGS += -DINSECURE" >> CONFIG.mine
 make clean
 make setup
 make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x
 ```
+
+The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. This is intended only for reproducing the artifact benchmarks. If MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`, make sure this flag has been added before compilation and rerun `make clean` before rebuilding.
 
 ### Part 2: Running and Retrieving Experiments
 
@@ -242,7 +245,6 @@ open plots/main.pdf
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
 ```
-
 
 
 
