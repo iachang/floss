@@ -6,7 +6,7 @@ We provide three options for reproducing paper results. The first option is for 
 
 1. [Option 1 [Recommended]](#option-1) produces full benchmark plots for FLOSS (and all other baselines), but requires access to running two AWS `c5.18xlarge` instances continuously for up to 24 hours. It is a simple setup consisting of several one-run scripts.
 
-2. [Option 2](#option-2) produces the full benchmark plots without AWS, but requires local resources comparable to two AWS `c5.18xlarge` instances. This can be done with two local Ubuntu servers, or with two Docker containers on a single large local server.
+2. [Option 2](#option-2) produces the full benchmark plots without AWS, but requires local resources comparable to two AWS `c5.18xlarge` instances. This totals to around 144 vCPUs and 288GB memory for a single local large server. This can be done with two local Ubuntu servers (each server with 72 vCPUs and 144GB memory), or with two Docker containers on a single large local server (containing 144 vCPUs and 288GB memory).
 
 3. [Option 3](#option-3) produces subsamples of the benchmark plots for FLOSS (and all other baselines) since we assume execution on a single machine with 16GB RAM and Apple M4 chip (or similar processing power). Larger input sizes are omitted to prevent exceeding memory consumption. Therefore, the pareto plots are not reproducible in this setting.
 
@@ -178,14 +178,12 @@ docker run -dit --name floss-party1 \
   floss-large-local bash
 ```
 
-4. Optionally shape the container network bandwidth to 25 Gbps:
+4. Shape the container network bandwidth to 25 Gbps to match the evaluation network bandwidth:
 
 ```sh
 docker exec floss-party0 bash -lc "tc qdisc replace dev eth0 root tbf rate 25gbit burst 32mb latency 50ms"
 docker exec floss-party1 bash -lc "tc qdisc replace dev eth0 root tbf rate 25gbit burst 32mb latency 50ms"
 ```
-
-If the `tc` command is not supported by the host kernel or Docker installation, the experiments can still be run without this step, but the network will not be bandwidth-limited to the AWS setting.
 
 5. Create `parties.txt` inside both containers:
 
@@ -196,13 +194,17 @@ docker exec floss-party1 bash -lc "cd /root/repo && printf '172.28.0.2:8644\n172
 
 ### Part 2: Running and Retrieving Experiments
 
-The following commands should be started in both containers at approximately the same time. Open one terminal for party 0 and one terminal for party 1.
+The following commands should be started in both containers at approximately the same time. Open one terminal for party 0 and one terminal for party 1. If any of the tests fails. just re
 
 On party 0:
-
+1. Run the docker container for party 0
 ```sh
 docker exec -it floss-party0 bash
 cd /root/repo
+```
+
+2. Run the all of the experiments (if they fail mid-way, run any individual experiment in isolation)
+```sh
 env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench simple_perm_network_shuffle
 env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench perm_network_shuffle
 env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench floss_shuffle
@@ -212,14 +214,22 @@ env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_perm_
 env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_quicksort
 env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_sorting_network
 ./scripts/bench_opmcc.sh 0 0 172.28.0.2:39530,172.28.0.3:39531
+```
+
+3. Exit the container:
+```sh
 exit
 ```
 
 On party 1:
-
+1. Run the Docker container for party 1
 ```sh
 docker exec -it floss-party1 bash
 cd /root/repo
+```
+
+2. Run the all of the experiments (if they fail mid-way, run any individual experiment in isolation)
+```sh
 env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench simple_perm_network_shuffle
 env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench perm_network_shuffle
 env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench floss_shuffle
@@ -229,6 +239,10 @@ env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_perm_
 env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_quicksort
 env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_sorting_network
 ./scripts/bench_opmcc.sh 0 1 172.28.0.2:39530,172.28.0.3:39531
+```
+
+3. Exit the container:
+```sh
 exit
 ```
 
