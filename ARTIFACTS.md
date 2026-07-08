@@ -2,17 +2,19 @@
 
 ## Reproducing Results
 
-We provide two options for reproducing paper results. The first option is for those with AWS resources, and the second option is for those running on a local computer.
+We provide three options for reproducing paper results. The first option is for those with AWS resources, the second option is for those with access to large local servers, and the third option is for those running on a local computer with more limited memory.
 
 1. [Option 1 [Recommended]](#option-1) produces full benchmark plots for FLOSS (and all other baselines), but requires access to running two AWS `c5.18xlarge` instances continuously for up to 24 hours. It is a simple setup consisting of several one-run scripts.
 
-2. [Option 2](#option-2) produces subsamples of the benchmark plots for FLOSS (and all other baselines) since we assume execution on a single machine with 16GB RAM and Apple M4 chip (or similar processing power). Larger input sizes are omitted to prevent exceeding memory consumption. Therefore, the pareto plots are not reproducible in this setting.
+2. [Option 2](#option-2) produces the full benchmark plots without AWS, but requires local resources comparable to two AWS `c5.18xlarge` instances. This can be done with two local Ubuntu servers, or with two Docker containers on a single large local server.
+
+3. [Option 3](#option-3) produces subsamples of the benchmark plots for FLOSS (and all other baselines) since we assume execution on a single machine with 16GB RAM and Apple M4 chip (or similar processing power). Larger input sizes are omitted to prevent exceeding memory consumption. Therefore, the pareto plots are not reproducible in this setting.
 
 ---
 
 <h2 id="option-1">[Option 1] Step-by-step artifact evaluation walkthrough for users with AWS Access</h2>
 
-This is the only way to replicate the full benchmark results of FLOSS. Provided access to AWS credentials, these one-run scripts will launch two `c5.18xlarge` instances and then run the full benchmark suite in whole.
+This is the automated way to replicate the full benchmark results of FLOSS. Provided access to AWS credentials, these one-run scripts will launch two `c5.18xlarge` instances and then run the full benchmark suite in whole.
 
 ### Part 1: Local Computer Setup
 
@@ -122,11 +124,141 @@ cat shuffle_perm_network_offline.csv
 
 ---
 
-<h2 id="option-2">[Option 2] Step-by-step artifact evaluation walkthrough for users running a local computer</h2>
+<h2 id="option-2">[Option 2] Step-by-step artifact evaluation walkthrough for users running large experiments without AWS</h2>
+
+Users without AWS access can still run the large experiments if they have local resources comparable to the AWS setup used by the artifact. The AWS setup uses two `c5.18xlarge` instances, each with 72 vCPUs, 144 GB of memory, and up to 25 Gbps networking.
+
+There are two natural local setups:
+
+1. Use two local Ubuntu servers. Each server should have approximately 72 hardware threads, 144 GB of available memory, and a high-bandwidth network connection to the other server. Install the artifact on both servers, create the same `parties.txt` file on both servers, and run the party-0 and party-1 benchmark commands simultaneously.
+
+2. Use one large local Ubuntu server with Docker. Start two Docker containers, allocate 72 threads and 144 GB of memory to each container, and connect them through a Docker network. The network can optionally be shaped to 25 Gbps with Linux traffic control (`tc`) to better match the AWS setting.
+
+The following commands describe the Docker setup used by one reviewer. They assume a local server with at least 144 hardware threads and enough memory to allocate 144 GB to each container. Run the commands from the project root directory after downloading and unpacking the artifact.
+
+### Part 1: Docker Container Setup
+
+1. Build the Docker image. This clones the FLOSS repository inside Docker, installs dependencies, compiles MP-SPDZ, installs OPM dependencies, and builds FLOSS inside the image.
+
+```sh
+cd /path/to/floss
+docker build --memory=8g \
+  --memory-swap=10g \
+  -t floss-large-local \
+  -f artifacts/local-large.Dockerfile .
+```
+
+2. Create a Docker network for the two parties:
+
+```sh
+docker network create --driver bridge --subnet 172.28.0.0/16 floss-bench-net
+```
+
+3. Start two containers from the image. Adjust the CPU ranges and/or memory if your server has less CPUs and memory available.
+
+```sh
+docker run -dit --name floss-party0 \
+  --cpuset-cpus="0-71" \
+  --memory="144g" \
+  --shm-size="16g" \
+  --cap-add=NET_ADMIN \
+  --privileged=true \
+  --network floss-bench-net \
+  --ip 172.28.0.2 \
+  floss-large-local bash
+
+docker run -dit --name floss-party1 \
+  --cpuset-cpus="72-143" \
+  --memory="144g" \
+  --shm-size="16g" \
+  --cap-add=NET_ADMIN \
+  --privileged=true \
+  --network floss-bench-net \
+  --ip 172.28.0.3 \
+  floss-large-local bash
+```
+
+4. Optionally shape the container network bandwidth to 25 Gbps:
+
+```sh
+docker exec floss-party0 bash -lc "tc qdisc replace dev eth0 root tbf rate 25gbit burst 32mb latency 50ms"
+docker exec floss-party1 bash -lc "tc qdisc replace dev eth0 root tbf rate 25gbit burst 32mb latency 50ms"
+```
+
+If the `tc` command is not supported by the host kernel or Docker installation, the experiments can still be run without this step, but the network will not be bandwidth-limited to the AWS setting.
+
+5. Create `parties.txt` inside both containers:
+
+```sh
+docker exec floss-party0 bash -lc "cd /root/repo && printf '172.28.0.2:8644\n172.28.0.3:8645\n' > parties.txt"
+docker exec floss-party1 bash -lc "cd /root/repo && printf '172.28.0.2:8644\n172.28.0.3:8645\n' > parties.txt"
+```
+
+### Part 2: Running and Retrieving Experiments
+
+The following commands should be started in both containers at approximately the same time. Open one terminal for party 0 and one terminal for party 1.
+
+On party 0:
+
+```sh
+docker exec -it floss-party0 bash
+cd /root/repo
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench simple_perm_network_shuffle
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench perm_network_shuffle
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench floss_shuffle
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_simple_perm_network
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_floss
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_perm_network
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_quicksort
+env ALONE=false RANK=0 IP_FILE="parties.txt" cargo bench --bench sort_with_sorting_network
+./scripts/bench_opmcc.sh 0 0 172.28.0.2:39530,172.28.0.3:39531
+exit
+```
+
+On party 1:
+
+```sh
+docker exec -it floss-party1 bash
+cd /root/repo
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench simple_perm_network_shuffle
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench perm_network_shuffle
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench floss_shuffle
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_simple_perm_network
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_floss
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_perm_network
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_quicksort
+env ALONE=false RANK=1 IP_FILE="parties.txt" cargo bench --bench sort_with_sorting_network
+./scripts/bench_opmcc.sh 0 1 172.28.0.2:39530,172.28.0.3:39531
+exit
+```
+
+The output CSVs are written to the project root inside each container. As in the AWS setup, collect the CSVs from party 0:
+
+```sh
+docker exec floss-party0 bash -lc "mkdir -p /root/results && cp /root/repo/*.csv /root/results/"
+docker cp floss-party0:/root/results/. .
+```
+
+### Part 3: Creating the Plots
+
+Run scripts to create table results and plots. This can be done on the host after installing the plotting dependencies from [Option 1](#option-1), or inside the party-0 container before copying out the plots.
+
+```sh
+cd plots/
+python3 gen_plot_data.py
+pdflatex main.tex
+cd .. # return to project root directory
+```
+
+The resulting tables and plots can be viewed using the same commands as in [Option 1](#option-1).
+
+---
+
+<h2 id="option-3">[Option 3] Step-by-step artifact evaluation walkthrough for users running a local computer</h2>
 
 We provide an option for users who want to generate the artifacts on their own local computer. There are certain restrictions. The user must be running either Mac OS X or Ubuntu and have at least 16GB of RAM. We restrict benchmarking to smaller input sizes since we assume that the device does not have memory equivalent to two `c5.18xlarge` instances.
 
-Because of this, users cannot reproduce the pareto plots on a local computer since it requires completing benchmarks with the largest shuffle size `2^20` and sorting size `2^13`. If reproducing pareto plots are desired, users will need to opt for [Option 1](#option-1).
+Because of this, users cannot reproduce the pareto plots on a local computer since it requires completing benchmarks with the largest shuffle size `2^20` and sorting size `2^13`. If reproducing pareto plots are desired, users will need to opt for [Option 1](#option-1) or [Option 2](#option-2).
 
 ### Part 1: Local Computer Setup
 
@@ -159,13 +291,13 @@ Compile MP-SPDZ and required protocols:
 
 ```zsh
 cd mp-spdz-0.4.2
-echo "MY_CFLAGS += -DINSECURE" >> CONFIG.mine
+echo "MY_CFLAGS += -DINSECURE -Wno-error=unused-parameter" >> CONFIG.mine
 make clean
 make setup
 make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x
 ```
 
-The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. This is intended only for reproducing the artifact benchmarks. If MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`, make sure this flag has been added before compilation and rerun `make clean` before rebuilding.
+The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. This is intended only for reproducing the artifact benchmarks. The `-Wno-error=unused-parameter` flag prevents MP-SPDZ's vendored `sse2neon` header warnings from stopping the build under `-Werror`. If MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`, make sure these flags have been added before compilation and rerun `make clean` before rebuilding.
 
 ### Part 2: Running and Retrieving Experiments
 
@@ -245,6 +377,3 @@ open plots/main.pdf
 cat shuffle_floss_offline.csv
 cat shuffle_perm_network_offline.csv
 ```
-
-
-

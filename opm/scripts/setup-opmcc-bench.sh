@@ -5,14 +5,14 @@ set -euo pipefail
 REPO_DIR="."   # folder name to cd into
 ZSHRC="${HOME}/.zshrc"
 
-echo "==> [1/8] Installing dependencies (apt + npm prerequisites)"
+echo "==> [1/9] Installing dependencies (apt + npm prerequisites)"
 apt-get update
 apt-get install -y gcc cmake nasm iproute2 npm ninja-build python3
 
-echo "==> [2/8] Installing bazelisk globally via npm"
+echo "==> [2/9] Installing bazelisk globally via npm"
 npm install -g @bazel/bazelisk
 
-echo "==> [3/8] Setting up bazel alias in ~/.zshrc (idempotent)"
+echo "==> [3/9] Setting up bazel alias in ~/.zshrc (idempotent)"
 if ! grep -q 'alias bazel="bazelisk"' "$ZSHRC" 2>/dev/null; then
   echo 'alias bazel="bazelisk"' >> "$ZSHRC"
   echo "   Added alias to $ZSHRC"
@@ -25,7 +25,7 @@ if command -v bazelisk >/dev/null 2>&1; then
   alias bazel="bazelisk"
 fi
 
-echo "==> [4/8] Entering repo directory: $REPO_DIR"
+echo "==> [4/9] Entering repo directory: $REPO_DIR"
 if [[ ! -d "$REPO_DIR" ]]; then
   echo "ERROR: Directory '$REPO_DIR' not found. Run this script from the parent directory of '$REPO_DIR'." >&2
   exit 1
@@ -36,7 +36,7 @@ echo "==> Cleaning bazel state and removing .bazelrc"
 bazel clean --expunge || true
 rm -f .bazelrc
 
-echo "==> [5/8] Patching WORKSPACE: insert llvm patch_cmds (idempotent)"
+echo "==> [5/9] Patching WORKSPACE: insert llvm patch_cmds (idempotent)"
 python3 - <<'PY'
 from pathlib import Path
 
@@ -72,7 +72,7 @@ else:
     print("OK: llvm patch_cmds already present (no change)")
 PY
 
-echo "==> [6/8] Patching WORKSPACE: remove TF mirror URL (404) if present"
+echo "==> [6/9] Patching WORKSPACE: remove TF mirror URL (404) if present"
 python3 - <<'PY'
 from pathlib import Path
 

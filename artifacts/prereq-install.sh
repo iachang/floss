@@ -16,6 +16,8 @@ source "$HOME/.cargo/env"
 echo "==> [3/6] Installing MP-SPDZ"
 cd mp-spdz-0.4.2
 chmod +x compile.py
+touch CONFIG.mine
+grep -qxF "MY_CFLAGS += -DINSECURE -Wno-error=unused-parameter" CONFIG.mine || echo "MY_CFLAGS += -DINSECURE -Wno-error=unused-parameter" >> CONFIG.mine
 make clean
 make setup
 make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x

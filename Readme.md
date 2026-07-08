@@ -8,7 +8,7 @@ This Rust library provides a framework for building modular arithmetic permutati
 
 This repository is organized as follows:
 
-- [artifacts/](artifacts/) — Files and scripts for generating artifacts on AWS EC2
+- [artifacts/](artifacts/) — Files and scripts for generating artifacts on AWS EC2 or comparable local servers
 - [OPM](opm/) — Source code files for OPM (provided by and approved to release by [Song et. al, 2023](https://eprint.iacr.org/2023/1794))
 - [mp-spdz-0.4.2/Programs/Source](mp-spdz-0.4.2/Programs/Source) — MPC circuit descriptions we use to benchmark shuffling protocols and sorting protocols with MP-SPDZ, including `sort-bench.py`, `quicksort.mpc`, and `quicksort_rand.mpc`.
 - [src/arithpermcircprep/mod.rs](src/arithpermcircprep/mod.rs) — Core trait definition for generating preprocessing for an arithmetic permutation circuit
@@ -56,13 +56,13 @@ Compile MP-SPDZ and 2PC malicious-secure protocols:
 
 ```zsh
 cd mp-spdz-0.4.2
-echo "MY_CFLAGS += -DINSECURE" >> CONFIG.mine
+echo "MY_CFLAGS += -DINSECURE -Wno-error=unused-parameter" >> CONFIG.mine
 make clean
 make setup
 make -j8 pairwise-offline.x mascot-offline.x lowgear-party.x mascot-party.x
 ```
 
-The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. It is needed for the artifact benchmarks if MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`; do not use this build for production deployments. If you add the flag after a previous MP-SPDZ build, run `make clean` before recompiling.
+The `-DINSECURE` flag enables MP-SPDZ's insecure benchmarking functionality for local key generation. It is needed for the artifact benchmarks if MP-SPDZ reports `You are trying to use insecure benchmarking functionality for local key generation`; do not use this build for production deployments. The `-Wno-error=unused-parameter` flag prevents MP-SPDZ's vendored `sse2neon` header warnings from stopping the build under `-Werror`. If you add these flags after a previous MP-SPDZ build, run `make clean` before recompiling.
 
 ### OPM (on Docker)
 

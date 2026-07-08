@@ -376,25 +376,3 @@ subprocess.run(
     ],
     check=True,
 )
-
-# create parties.txt file, and send them to parties
-# parties_txt = open(PROJECT_ROOT + "/parties.txt", "w")
-# parties_txt.write(f"{sysConfig['Party0PrivateIP']}:8644\n")
-# parties_txt.write(f"{sysConfig['Party1PrivateIP']}:8645\n")
-# parties_txt.close()
-
-# # copy from this repo to parties (project root)
-# subprocess.run(
-#     [
-#         "scp", "-i", "~/.ssh/" + pem_file, "-o", "StrictHostKeyChecking=no", "-r", PROJECT_ROOT + "/parties.txt", "ubuntu@" + sysConfig["Party0PublicIP"] + ":~/"
-#     ],
-#     check=True,
-# )
-# subprocess.run(
-#     [
-#         "scp", "-i", "~/.ssh/" + pem_file, "-o", "StrictHostKeyChecking=no", "-r", PROJECT_ROOT, "ubuntu@" + sysConfig["Party1PublicIP"] + ":~/"
-#     ],
-#     check=True,
-# )
-
-

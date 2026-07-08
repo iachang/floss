@@ -31,7 +31,7 @@ env ALONE=false RANK={rank} IP_FILE="parties.txt" cargo bench --bench sort_with_
 env ALONE=false RANK={rank} IP_FILE="parties.txt" cargo bench --bench sort_with_perm_network > output_sort_perm.log 2>&1 ;
 env ALONE=false RANK={rank} IP_FILE="parties.txt" cargo bench --bench sort_with_quicksort > output_sort_quick.log 2>&1 ;
 env ALONE=false RANK={rank} IP_FILE="parties.txt" cargo bench --bench sort_with_sorting_network > output_sort_net.log 2>&1 ;
-./scripts/bench_opmcc.sh {rank} {config["Party0PrivateIP"]}:39530,{config["Party1PrivateIP"]}:39531  > output_opmcc.log 2>&1 ;
+./scripts/bench_opmcc.sh 0 {rank} {config["Party0PrivateIP"]}:39530,{config["Party1PrivateIP"]}:39531  > output_opmcc.log 2>&1 ;
 ' </dev/null >/dev/null 2>&1 &
 """)
     subprocess.Popen(cmd, shell=True)
